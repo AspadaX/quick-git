@@ -7,7 +7,7 @@ QUICK_GIT_CONFIG_FILE="${HOME}/.quick-git.conf"
 if [ ! -f "${QUICK_GIT_CONFIG_FILE}" ]; then
   echo "# quick-git configuration file" > "${QUICK_GIT_CONFIG_FILE}"
   echo "GITHUB_BASE_URL=https://github.com" >> "${QUICK_GIT_CONFIG_FILE}"
-  echo "DEFAULT_CONTAINER_PREFIX=xb" >> "${QUICK_GIT_CONFIG_FILE}"
+  echo "GITHUB_OWNER=yourusername" >> "${QUICK_GIT_CONFIG_FILE}"
   echo "# Add any other configuration options below" >> "${QUICK_GIT_CONFIG_FILE}"
 fi
 
@@ -37,6 +37,6 @@ show_config() {
   echo "Current quick-git configuration:"
   echo "-------------------------------"
   echo "GITHUB_BASE_URL: ${GITHUB_BASE_URL}"
-  echo "DEFAULT_CONTAINER_PREFIX: ${DEFAULT_CONTAINER_PREFIX}"
+  echo "GITHUB_OWNER: ${GITHUB_OWNER}"
   echo "-------------------------------"
 }
