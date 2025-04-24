@@ -42,9 +42,9 @@ push_code() {
 # Function to create a new branch in remote and clone it locally
 create_and_clone_branch() {
   local branch_name="$1"
-  local repo_url="$2"
+  local repo_url="$GITHUB_BASE_URL/$GITHUB_OWNER/$2"
   local date_suffix=$(date +"%Y-%m-%d")
-  local container_folder="${DEFAULT_CONTAINER_PREFIX}-${branch_name}-${date_suffix}"
+  local container_folder="${GITHUB_OWNER}-${branch_name}-${date_suffix}"
   
   # Validate inputs
   if [ -z "$branch_name" ]; then
@@ -73,6 +73,11 @@ create_and_clone_branch() {
   
   # Push the new branch to remote
   git push -u origin "$branch_name"
+      
+  # Change back to the repository folder
+  echo "Navigating to repository folder: $PWD"
+  # zed "./${container_folder}/${repo_name}"
+  zed $PWD
   
   echo "Created and cloned branch '$branch_name' in folder: $container_folder/$repo_name"
   echo "You are now in the new branch. After development, you can remove the entire folder:"
