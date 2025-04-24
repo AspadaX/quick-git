@@ -2,21 +2,33 @@
 
 echo "Setting up quick-git..."
 
-# Make sure all scripts are executable
-chmod +x "$(dirname "$0")/main.sh"
-chmod +x "$(dirname "$0")/src/config.sh"
-chmod +x "$(dirname "$0")/src/git_utils.sh"
+# Get the absolute path to the package directory (where this script is located)
+# When spm runs this script, it will be inside the package directory
+PACKAGE_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-# Create a symlink to main.sh in /usr/local/bin for easy access
+# Make sure all scripts are executable
+chmod +x "${PACKAGE_DIR}/main.sh"
+chmod +x "${PACKAGE_DIR}/src/config.sh"
+chmod +x "${PACKAGE_DIR}/src/git_utils.sh"
+
+# Create a wrapper script in /usr/local/bin that sets the correct package directory
 if [ -d "/usr/local/bin" ]; then
-  sudo ln -sf "$(dirname "$0")/main.sh" /usr/local/bin/quick-git
+  cat > /tmp/quick-git-wrapper << EOF
+#!/usr/bin/env sh
+# Wrapper for quick-git that ensures correct path resolution
+PACKAGE_DIR="${PACKAGE_DIR}"
+exec "\${PACKAGE_DIR}/main.sh" "\$@"
+EOF
+
+  # Make the wrapper executable and move it to /usr/local/bin
+  chmod +x /tmp/quick-git-wrapper
+  sudo mv /tmp/quick-git-wrapper /usr/local/bin/quick-git
   echo "Created symlink in /usr/local/bin/quick-git"
 else
   echo "Warning: /usr/local/bin directory not found. You may need to manually add this script to your PATH."
 fi
 
 # Initial configuration setup
-DIR="$(cd "$(dirname "$0")" && pwd)"
-source "${DIR}/src/config.sh"
+source "${PACKAGE_DIR}/src/config.sh"
 
 echo "Installation complete! Run 'quick-git help' to see available commands."
